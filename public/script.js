@@ -3,7 +3,7 @@ class ChatBot {
         this.chatMessages = document.getElementById('chatMessages');
         this.messageInput = document.getElementById('messageInput');
         this.sendButton = document.getElementById('sendButton');
-        this.apiBaseUrl = 'http://localhost:3000/api';
+        this.apiBaseUrl = 'http://localhost:8000/api';
         this.userScrolled = false;
         
         this.init();
