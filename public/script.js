@@ -3,8 +3,9 @@ class ChatBot {
         this.chatMessages = document.getElementById('chatMessages');
         this.messageInput = document.getElementById('messageInput');
         this.sendButton = document.getElementById('sendButton');
-        this.apiBaseUrl = 'https://hbeducationalfirm.site/api';
+        this.apiBaseUrl = 'http://localhost:8000/api';
         this.userScrolled = false;
+        this.isTyping = false;
         
         this.init();
     }
@@ -22,11 +23,21 @@ class ChatBot {
             const isAtBottom = this.chatMessages.scrollTop + this.chatMessages.clientHeight >= this.chatMessages.scrollHeight - 10;
             this.userScrolled = !isAtBottom;
         });
+
+        // Fix mobile keyboard covering input
+        this.messageInput.addEventListener('focus', () => {
+            setTimeout(() => {
+                this.messageInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        });
     }
 
     async sendMessage() {
         const message = this.messageInput.value.trim();
-        if (!message) return;
+        if (!message || this.isTyping) return;
+
+        // Disable input while processing
+        this.setInputState(false);
 
         // Add user message to chat
         this.addMessage(message, 'user');
@@ -43,6 +54,19 @@ class ChatBot {
             this.removeTypingIndicator(typingIndicator);
             this.addMessage('Sorry, I encountered an error. Please try again.', 'bot');
             console.error('Error:', error);
+            this.setInputState(true);
+        }
+    }
+
+    setInputState(enabled) {
+        this.messageInput.disabled = !enabled;
+        this.sendButton.disabled = !enabled;
+        if (enabled) {
+            this.messageInput.classList.remove('disabled');
+            this.sendButton.classList.remove('disabled');
+        } else {
+            this.messageInput.classList.add('disabled');
+            this.sendButton.classList.add('disabled');
         }
     }
 
@@ -106,12 +130,13 @@ class ChatBot {
         this.chatMessages.appendChild(messageDiv);
         this.scrollToBottom();
 
-        // Start typewriter effect with faster speed (15ms instead of 30ms)
-        this.typeWriter(messageText, this.formatMessage(text), 0, 15);
+        // Start typewriter effect with very fast speed (5ms for instant-like typing)
+        this.typeWriter(messageText, this.formatMessage(text), 0, 5);
     }
 
     typeWriter(element, text, index, speed) {
         if (index < text.length) {
+            this.isTyping = true;
             element.innerHTML = text.substring(0, index + 1) + '<span class="cursor">|</span>';
             // Only auto-scroll if user hasn't manually scrolled up
             if (!this.userScrolled) {
@@ -123,6 +148,8 @@ class ChatBot {
         } else {
             // Remove cursor when typing is complete
             element.innerHTML = text;
+            this.isTyping = false;
+            this.setInputState(true);
             // Reset scroll detection after typing is complete
             this.userScrolled = false;
         }

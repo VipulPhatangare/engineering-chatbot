@@ -8,10 +8,16 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
+    min-height: -webkit-fill-available;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
+    overflow: hidden;
+}
+
+html {
+    height: -webkit-fill-available;
 }
 
 .chat-container {
@@ -332,4 +338,52 @@ body {
     .message-content {
         max-width: 90%;
     }
+}
+
+/* Mobile keyboard fix - ensure input stays visible */
+@media (max-width: 767px) {
+    body {
+        align-items: flex-start;
+    }
+    
+    .chat-container {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 20px);
+        height: calc(100vh - 20px);
+        max-height: calc(100vh - 20px);
+    }
+    
+    .chat-input {
+        position: sticky;
+        bottom: 0;
+        z-index: 100;
+    }
+}
+
+/* Disabled state styling */
+#messageInput.disabled,
+#sendButton.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#sendButton.disabled {
+    pointer-events: none;
+}
+
+#messageInput.disabled {
+    background-color: #f1f5f9;
+}
+
+/* Loading state animation */
+#sendButton.disabled {
+    animation: pulse-button 1.5s infinite;
+}
+
+@keyframes pulse-button {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.7; }
 }
