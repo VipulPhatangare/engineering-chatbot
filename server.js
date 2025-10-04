@@ -47,7 +47,7 @@ app.post('/api/chat', async (req, res) => {
             timestamp: new Date().toISOString()
         };
 
-        console.log('Sending to n8n:', JSON.stringify(n8nPayload, null, 2));
+        // console.log('Sending to n8n:', JSON.stringify(n8nPayload, null, 2));
 
         // Send full context to n8n webhook
         const n8nResponse = await axios.post(N8N_WEBHOOK_URL, n8nPayload, {
@@ -57,7 +57,7 @@ app.post('/api/chat', async (req, res) => {
             timeout: 100000
         });
 
-        console.log('n8n response:', n8nResponse.data);
+        // console.log('n8n response:', n8nResponse.data);
 
         // Extract response from n8n - handle different response formats
         let botReply;
@@ -98,11 +98,11 @@ app.post('/api/chat', async (req, res) => {
     } catch (error) {
         console.error('Error processing chat message:', error);
         
-        // Fallback responses
+        // Fallback responses for engineering admission queries
         const fallbackResponses = [
-            "I'm having trouble connecting right now. Please try again in a moment.",
-            "It seems I'm experiencing some technical difficulties. Could you please rephrase your question?",
-            "I apologize, but I'm unable to process your request at the moment. Please try again later."
+            "I'm having trouble accessing the admission database right now. Please try again in a moment.",
+            "It seems I'm experiencing some technical difficulties. Could you please rephrase your admission-related question?",
+            "I apologize, but I'm unable to fetch admission information at the moment. Please try again later or contact the admission office directly."
         ];
         
         const randomResponse = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
@@ -119,7 +119,7 @@ app.get('/api/health', (req, res) => {
     res.json({ 
         status: 'OK', 
         timestamp: new Date().toISOString(),
-        service: 'ChatBot API'
+        service: 'Engineering Admission Chatbot API'
     });
 });
 
@@ -172,9 +172,9 @@ app.use((error, req, res, next) => {
 // });
 
 app.listen(PORT, () => {
-    console.log(`ChatBot server running on port ${PORT}`);
-    console.log(`Frontend: http://localhost:${PORT}`);
-    console.log(`API Health: http://localhost:${PORT}/api/health`);
+    console.log(`🎓 Engineering Admission Chatbot server running on port ${PORT}`);
+    console.log(`🌐 Frontend: http://localhost:${PORT}`);
+    console.log(`❤️ API Health: http://localhost:${PORT}/api/health`);
 });
 
 module.exports = app;
