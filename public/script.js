@@ -13,9 +13,23 @@ class ChatBot {
     init() {
         this.sendButton.addEventListener('click', () => this.sendMessage());
         this.messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && !this.isTyping) {
+                e.preventDefault();
                 this.sendMessage();
             }
+        });
+
+        // Mobile keyboard handling
+        this.messageInput.addEventListener('focus', () => {
+            document.body.classList.add('keyboard-visible');
+            // Small delay to ensure keyboard is shown, then scroll to input
+            setTimeout(() => {
+                this.messageInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 300);
+        });
+
+        this.messageInput.addEventListener('blur', () => {
+            document.body.classList.remove('keyboard-visible');
         });
 
         // Track user scrolling
