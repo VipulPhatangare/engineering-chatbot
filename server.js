@@ -14,7 +14,7 @@ app.use(express.static('public'));
 // n8n webhook URL - Updated with your specific webhook
 const N8N_WEBHOOK_URL = 'https://sythomind.app.n8n.cloud/webhook/chat';
 
-// const N8N_WEBHOOK_URL = 'https://sythomind.app.n8n.cloud/webhook-test/cclhat';
+// const N8N_WEBHOOK_URL = 'https://sythomind.app.n8n.cloud/webhook-test/chat';
 
 // Store conversation context (in production, use a database)
 const conversationContext = new Map();
